@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "81013872050",
+    "firebase_url": "https://bloodstore-ecbf7.firebaseio.com",
+    "project_id": "bloodstore-ecbf7",
+    "storage_bucket": "bloodstore-ecbf7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:81013872050:android:10feef5115fea2657140ab",
+        "android_client_info": {
+          "package_name": "com.example.bloodbank"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "81013872050-6etpvu6o58apacqbse5amv58jsdgntf8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bloodbank",
+            "certificate_hash": "3a566d9d3d43415daafdc561fb9a5bb5f4e13e27"
+          }
+        },
+        {
+          "client_id": "81013872050-dmne7nchovl4fcbenuu34rmm45o53fj3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhagSsp_8Ep7YZ9IAwN7Ec7iGkdDnR4ME"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "81013872050-dmne7nchovl4fcbenuu34rmm45o53fj3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

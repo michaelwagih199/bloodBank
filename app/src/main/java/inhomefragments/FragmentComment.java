@@ -1,0 +1,301 @@
+package inhomefragments;
+
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Toast;
+
+
+import androidx.fragment.app.FragmentTransaction;
+
+import com.example.bloodbank.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.UUID;
+
+import base.BaseFragment;
+import entities.CommentsPojo;
+import entities.CommentsPojoAdd;
+import entities.PostAdapters;
+
+
+public class FragmentComment extends BaseFragment {
+
+
+    public FragmentComment() {
+        // Required empty public constructor
+    }
+
+    //add Firebase Database stuff
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference databaseReference;
+
+    private FirebaseAuth firebaseAuth;
+    String curentUser;
+    String userEmail;
+    ListView listVComments;
+    int likeCounter = 0;
+    boolean isUserLike = false;
+
+
+    View view;
+    ArrayList<CommentsPojo> arrayList = new ArrayList<CommentsPojo>();
+    ArrayList<CommentsPojo> arrayNew = new ArrayList<CommentsPojo>();
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        view = inflater.inflate(R.layout.fragment_fragment_comment, container, false);
+        //// TODO: 04/05/2019 make comments
+
+        listVComments = (ListView) view.findViewById(R.id.listVComments);
+
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = mFirebaseDatabase.getReference();
+
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        curentUser = user.getUid();
+        userEmail = user.getEmail();
+        getPostst();
+
+        view.findViewById(R.id.fab)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AddCommentDialog();
+                    }
+                });
+
+
+        return view;
+    }
+
+    public void reresh() {
+        // Reload current fragment
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        if (Build.VERSION.SDK_INT >= 26) {
+            ft.setReorderingAllowed(false);
+        }
+        ft.detach(this).attach(this).commit();
+    }
+
+
+    public void getPostst() {
+        Query query = databaseReference.child("Posts").orderByChild("userId");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        CommentsPojo note = issue.getValue(CommentsPojo.class);
+                        note.setUserId(userEmail);
+                        arrayList.add(note);
+                    }
+//                   Log.e("tttt",arrayList.get(0).getName()+""+arrayList.get(1).getName());
+                    PostAdapters customAdapter = new PostAdapters(getContext(), arrayList);
+                    listVComments.setAdapter(customAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("ram", databaseError.getDetails());
+            }
+        });
+    }
+
+    public void AddCommentDialog() {
+        // get prompts.xml view
+        LayoutInflater li = LayoutInflater.from(getContext());
+        View promptsView = li.inflate(R.layout.prompts, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                getContext());
+        // set prompts.xml to alertdialog builder
+        alertDialogBuilder.setView(promptsView);
+        final EditText userInput = (EditText) promptsView
+                .findViewById(R.id.editTextDialogUserInput);
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // get user input and set it to result
+                                // edit text
+                                try {
+                                    addPost(generateCode(), userInput.getText().toString(), likeCounter, isUserLike);
+                                    arrayList.clear();
+                                    getPostst();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        // show it
+        alertDialog.show();
+    }
+
+    public void addPost(String nodeId, String commentContent, int likeCounter, boolean isUserLike) {
+        try {
+            CommentsPojoAdd commentsPojoAdd = new CommentsPojoAdd(nodeId, commentContent, curentUser, likeCounter, isUserLike);
+            databaseReference.child("Posts").child(nodeId).setValue(commentsPojoAdd);
+            toastMessage("تم الحفظ");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateData(String nodeId) {
+
+
+        getIsUserLike(nodeId);
+        getLikeCounter(nodeId);
+
+        FirebaseDatabase mFirebaseDatabase;
+        DatabaseReference databaseReference;
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = mFirebaseDatabase.getReference().child("Posts");
+        databaseReference.child(nodeId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!isUserLike) {
+                    dataSnapshot.getRef().child("likeCounter").setValue(likeCounter + 1);
+                    dataSnapshot.getRef().child("userLike").setValue(true);
+
+
+                } else {
+                    dataSnapshot.getRef().child("likeCounter").setValue(likeCounter - 1);
+                    dataSnapshot.getRef().child("userLike").setValue(false);
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("User", databaseError.getMessage());
+            }
+        });
+
+    }
+
+    public void test(){
+
+        DatabaseReference zonesRef = FirebaseDatabase.getInstance().getReference("Posts");
+        Query query = zonesRef;
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        CommentsPojo note = issue.getValue(CommentsPojo.class);
+                        note.setUserId(userEmail);
+                        arrayNew.add(note);
+                    }
+//                   Log.e("tttt",arrayList.get(0).getName()+""+arrayList.get(1).getName());
+                    PostAdapters customAdapter = new PostAdapters(getContext(), arrayNew);
+                    listVComments.setAdapter(customAdapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("ram", databaseError.getDetails());
+            }
+        });
+    }
+
+
+
+    public void getLikeCounter(final String id) {
+        DatabaseReference zonesRef = FirebaseDatabase.getInstance().getReference("Posts").child(id);
+        Query query = zonesRef;
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    CommentsPojo note = dataSnapshot.getValue(CommentsPojo.class);
+                    likeCounter = note.getLikeCounter();
+                    Log.e("JJ", likeCounter + "");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("ram", databaseError.getDetails());
+            }
+        });
+
+    }
+
+    public void getIsUserLike(String id) {
+        final boolean[] result = new boolean[1];
+        DatabaseReference zonesRef = FirebaseDatabase.getInstance().getReference("Posts").child(id);
+        Query query = zonesRef;
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    CommentsPojo note = dataSnapshot.getValue(CommentsPojo.class);
+                    isUserLike = note.isUserLike();
+                    Log.e("ZZ", isUserLike + "");
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("ram", databaseError.getDetails());
+            }
+        });
+
+    }
+
+    public String generateCode() {
+        // Creating a random UUID (Universally unique identifier).
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString();
+    }
+
+    /**
+     * customizable toast
+     *
+     * @param message
+     */
+    private void toastMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+
+}
