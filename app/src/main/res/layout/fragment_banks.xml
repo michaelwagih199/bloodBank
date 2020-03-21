@@ -24,20 +24,7 @@
     </androidx.appcompat.widget.Toolbar>
 
 
-    <TableLayout
-        android:id="@+id/tl_sliding"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@color/Red"
-        android:minHeight="?attr/actionBarSize"
-        app:tabTextAppearance="@style/MineCustomTabText"
-        app:tabSelectedTextColor="@color/colorPrimaryDark"
-        app:tabTextColor="@color/White"
-        app:tabMode="fixed">
 
-
-    </TableLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/vp_viewpager"

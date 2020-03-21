@@ -105,7 +105,6 @@ public class AddDonorFragment extends BaseFragment {
 
         // Create request to get image from filesystem when button clicked
         view.findViewById(R.id.btn_upload_file)
-
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

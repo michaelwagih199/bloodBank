@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">blood store</string>
+    <string name="app_name">Blood Store</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="main_home">الرئيسية</string>
     <string name="search">بحث</string>

@@ -43,8 +43,6 @@ public class addImag extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageReference;
 
-
-
     private final int PICK_IMAGE_REQUEST = 71;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
