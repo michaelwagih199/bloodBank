@@ -38,11 +38,8 @@ public class SignUpAccount extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up_account);
-
-
         //initializing firebase auth object
         firebaseAuth = FirebaseAuth.getInstance();
-
         //initializing views
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
@@ -128,7 +125,7 @@ public class SignUpAccount extends AppCompatActivity {
         progressDialog.show();
 
         //creating a new user
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
+        firebaseAuth.createUserWithEmailAndPassword(email,password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {

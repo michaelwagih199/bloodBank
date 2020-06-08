@@ -116,4 +116,28 @@
             android:textAlignment="textStart"
             android:textSize="20sp"/>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen8"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtVPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="TextView"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="textStart"
+            android:textColor="@color/colorAccent"
+            android:text="سعر الكيس"
+            android:textSize="20sp" />
+    </LinearLayout>
 </LinearLayout>

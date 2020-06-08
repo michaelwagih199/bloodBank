@@ -68,11 +68,13 @@ public class MyListAdapter implements ListAdapter {
             TextView txtVGovernorate =convertView.findViewById(R.id.txtVGovernorate);
             TextView txtVbloodType =convertView.findViewById(R.id.txtVbloodType);
             TextView txtVDate =convertView.findViewById(R.id.txtVDate);
+            TextView txtVPrice =convertView.findViewById(R.id.txtVPrice);
             txtVDoctorName.setText(subjectData.getName());
             txtVDoctorMob.setText(subjectData.getMobile());
             txtVGovernorate.setText(subjectData.getCountry());
             txtVbloodType.setText(subjectData.getBloodType());
             txtVDate.setText(subjectData.getTime());
+            txtVPrice.setText(String.valueOf(subjectData.getPrice()));
         }
 
         return convertView;

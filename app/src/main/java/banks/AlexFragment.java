@@ -20,7 +20,6 @@ public class AlexFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     public int[] imageSource = {
             R.drawable.alex1,
             R.drawable.alex2,

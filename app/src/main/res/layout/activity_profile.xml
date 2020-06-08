@@ -60,7 +60,6 @@
                 android:textSize="@dimen/_20ssp"
                 android:fontFamily="sans-serif-black"
                 android:textAlignment="center"
-
                 android:textColor="@android:color/white" />
 
             <TextView
@@ -85,16 +84,15 @@
                 android:textColor="@color/White"
                 android:fontFamily="sans-serif-black"
                 android:textSize="@dimen/_30ssp"/>
-
             <Button
                 android:id="@+id/btnLogOut"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20ssp"
                 android:text="LogOut"
-                android:textColor="@color/White"
+                android:textColor="@color/blue_grey_500"
                 android:textSize="25dp"
-                android:background="@drawable/ic_rounded_button"
+                android:background="@drawable/ic_rounded_button2"
                 android:drawableRight="@drawable/ic_navigate_next"/>
         </LinearLayout>
     </ScrollView>

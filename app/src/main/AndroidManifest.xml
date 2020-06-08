@@ -21,7 +21,6 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -41,6 +40,7 @@
         <activity android:name="activities.Profile" />
         <activity android:name="activities.getLocation"
             android:theme="@android:style/Theme.Holo.Light.Dialog" >
+
         </activity>
         <activity android:name="activities.SignUpAccount" />
         <activity android:name="activities.DonnersLists" />

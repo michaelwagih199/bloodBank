@@ -108,7 +108,7 @@ public class FragmentComment extends BaseFragment {
 
                     for (DataSnapshot issue : dataSnapshot.getChildren()) {
                         CommentsPojo note = issue.getValue(CommentsPojo.class);
-                        note.setUserId(userEmail);
+                       // note.setUserId(us\);
                         arrayList.add(note);
                     }
 //                   Log.e("tttt",arrayList.get(0).getName()+""+arrayList.get(1).getName());
@@ -167,7 +167,7 @@ public class FragmentComment extends BaseFragment {
 
     public void addPost(String nodeId, String commentContent, int likeCounter, boolean isUserLike) {
         try {
-            CommentsPojoAdd commentsPojoAdd = new CommentsPojoAdd(nodeId, commentContent, curentUser, likeCounter, isUserLike);
+            CommentsPojoAdd commentsPojoAdd = new CommentsPojoAdd(nodeId, commentContent, userEmail, likeCounter, isUserLike);
             databaseReference.child("Posts").child(nodeId).setValue(commentsPojoAdd);
             toastMessage("تم الحفظ");
         } catch (Exception e) {
@@ -176,7 +176,6 @@ public class FragmentComment extends BaseFragment {
     }
 
     public void updateData(String nodeId) {
-
 
         getIsUserLike(nodeId);
         getLikeCounter(nodeId);
@@ -192,13 +191,10 @@ public class FragmentComment extends BaseFragment {
                     dataSnapshot.getRef().child("likeCounter").setValue(likeCounter + 1);
                     dataSnapshot.getRef().child("userLike").setValue(true);
 
-
                 } else {
                     dataSnapshot.getRef().child("likeCounter").setValue(likeCounter - 1);
                     dataSnapshot.getRef().child("userLike").setValue(false);
-
                 }
-
             }
 
             @Override
@@ -210,7 +206,6 @@ public class FragmentComment extends BaseFragment {
     }
 
     public void test(){
-
         DatabaseReference zonesRef = FirebaseDatabase.getInstance().getReference("Posts");
         Query query = zonesRef;
         query.addListenerForSingleValueEvent(new ValueEventListener() {

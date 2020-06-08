@@ -3,8 +3,9 @@ package entities;
 public class DonnerPojo {
 
    private String name, mobile,email,age,time,gender,bloodType, country, paymentType,longitude,latitude;
+   private double price;
 
-   public DonnerPojo(String name, String mobile, String email, String age, String time, String gender, String bloodType, String country, String paymentType, String longitude, String latitude) {
+   public DonnerPojo(String name, String mobile, String email, String age, String time, String gender, String bloodType, String country, String paymentType, String longitude, String latitude, double price) {
       this.name = name;
       this.mobile = mobile;
       this.email = email;
@@ -16,6 +17,15 @@ public class DonnerPojo {
       this.paymentType = paymentType;
       this.longitude = longitude;
       this.latitude = latitude;
+      this.price = price;
+   }
+
+   public double getPrice() {
+      return price;
+   }
+
+   public void setPrice(double price) {
+      this.price = price;
    }
 
    public String getName() {

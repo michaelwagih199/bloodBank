@@ -7,8 +7,7 @@
     android:layout_height="match_parent"
     android:layout_margin="@dimen/dimen16"
     android:orientation="vertical"
-    android:background="@color/White"
-    tools:context=".inhomefragments.AddDonorFragment">
+    android:background="@color/White">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -161,6 +160,12 @@
                     android:textColor="@color/colorAccentDark"
                     android:textSize="16dp" />
             </RadioGroup>
+            <EditText
+                android:id="@+id/etPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint ="سعر الكيس "
+                />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

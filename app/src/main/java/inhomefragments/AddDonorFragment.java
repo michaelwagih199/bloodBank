@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,24 +14,19 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import com.example.bloodbank.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-
 import activities.addImag;
 import activities.getLocation;
 import base.BaseFragment;
 import entities.DonnerPojo;
-
 
 public class AddDonorFragment extends BaseFragment {
 
@@ -54,24 +48,20 @@ public class AddDonorFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-
-    EditText etMob, etName, et_email, et_age, et_time, et_mobile;
+    EditText etMob, etName, et_email, et_age, et_time, et_mobile, etPrice;
     RadioButton radioMale, radioFemale, radioFree, radiopaid;
     Spinner spinnerBlodType, spinnerCountry;
     String gender,bloodType, country;
 
     private DatabaseReference mDatabase;
     private FirebaseAuth firebaseAuth;
-
     View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //getting current user
-
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_add_donor, container, false);
-
 
         try {
             mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -86,17 +76,16 @@ public class AddDonorFragment extends BaseFragment {
         }
 
         etName =(EditText) view.findViewById(R.id.et_name);
+        etPrice = (EditText) view.findViewById(R.id.etPrice);
         etMob = (EditText)view.findViewById(R.id.et_mobile);
         et_email = (EditText) view.findViewById(R.id.et_email);
         et_age = (EditText) view.findViewById(R.id.et_age);
         et_time = (EditText) view.findViewById(R.id.et_time);
         et_mobile = (EditText)  view.findViewById(R.id.et_mobile);
-
         radioFemale = (RadioButton) view.findViewById(R.id.radioBtn_female);
         radioMale = (RadioButton) view.findViewById(R.id.radioBtn_male);
         radioFree = (RadioButton) view.findViewById(R.id.radioBtn_paymentFreeAdd);
         radiopaid = (RadioButton) view.findViewById(R.id.radioBtn_paymentPaidAdd);
-
         spinnerBlodType = (Spinner) view.findViewById(R.id.spinnerBloodType);
         spinnerCountry = (Spinner) view.findViewById(R.id.spinnerCountry);
 
@@ -115,7 +104,6 @@ public class AddDonorFragment extends BaseFragment {
 
         Intent i = new Intent(getContext(), getLocation.class);
         startActivity(i);
-
         // submitResult
         view.findViewById(R.id.btn_send)
                 .setOnClickListener(new View.OnClickListener() {
@@ -133,7 +121,9 @@ public class AddDonorFragment extends BaseFragment {
                                     spinnerBlodType.getSelectedItem().toString(),
                                     spinnerCountry.getSelectedItem().toString(),
                                     getData()[1],
-                                    getData()[0]);
+                                    getData()[0],
+                                    Double.parseDouble(etPrice.getText().toString())
+                                    );
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -152,18 +142,16 @@ public class AddDonorFragment extends BaseFragment {
     }
 
 
-    public void addDonner(String name, String mobile, String email, String age, String time, String gender, String bloodType, String country, String longitude, String latitude) {
+    public void addDonner(String name, String mobile, String email, String age, String time, String gender, String bloodType, String country, String longitude, String latitude, double price) {
         String paymentType = "f";
         if (radiopaid.isChecked()) {
             paymentType = "paid";
         } else if (radioFree.isChecked()) {
             paymentType = "free";
         }
-
-            DonnerPojo donner = new DonnerPojo(name, mobile, email, age, time, gender, bloodType, country, paymentType, longitude, latitude);
+        DonnerPojo donner = new DonnerPojo(name, mobile, email, age, time, gender, bloodType, country, paymentType, longitude, latitude, price);
             mDatabase.child("Donors").child(name).setValue(donner);
             toastMessage("تم الحفظ");
-
     }
 
 
@@ -230,7 +218,6 @@ public class AddDonorFragment extends BaseFragment {
 
     /**
      * customizable toast
-     *
      * @param message
      */
     private void toastMessage(String message) {
