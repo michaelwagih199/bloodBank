@@ -135,6 +135,9 @@ public class FragmentComment extends BaseFragment {
         alertDialogBuilder.setView(promptsView);
         final EditText userInput = (EditText) promptsView
                 .findViewById(R.id.editTextDialogUserInput);
+
+        final EditText userPhone = (EditText) promptsView
+                .findViewById(R.id.etYourMobilePhone);
         // set dialog message
         alertDialogBuilder
                 .setCancelable(false)
@@ -144,7 +147,7 @@ public class FragmentComment extends BaseFragment {
                                 // get user input and set it to result
                                 // edit text
                                 try {
-                                    addPost(generateCode(), userInput.getText().toString(), likeCounter, isUserLike);
+                                    addPost(generateCode(), userInput.getText().toString(), likeCounter, isUserLike,userPhone.getText().toString());
                                     arrayList.clear();
                                     getPostst();
                                 } catch (Exception e) {
@@ -165,9 +168,9 @@ public class FragmentComment extends BaseFragment {
         alertDialog.show();
     }
 
-    public void addPost(String nodeId, String commentContent, int likeCounter, boolean isUserLike) {
+    public void addPost(String nodeId, String commentContent, int likeCounter, boolean isUserLike,String mobile) {
         try {
-            CommentsPojoAdd commentsPojoAdd = new CommentsPojoAdd(nodeId, commentContent, userEmail, likeCounter, isUserLike);
+            CommentsPojoAdd commentsPojoAdd = new CommentsPojoAdd(nodeId, commentContent, userEmail, mobile,likeCounter, isUserLike);
             databaseReference.child("Posts").child(nodeId).setValue(commentsPojoAdd);
             toastMessage("تم الحفظ");
         } catch (Exception e) {

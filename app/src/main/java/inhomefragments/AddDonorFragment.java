@@ -14,19 +14,31 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import com.example.bloodbank.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+
+import activities.HomeActivity;
 import activities.addImag;
 import activities.getLocation;
 import base.BaseFragment;
 import entities.DonnerPojo;
+import entities.DonorInfomation;
 
 public class AddDonorFragment extends BaseFragment {
 
@@ -48,13 +60,20 @@ public class AddDonorFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    EditText etMob, etName, et_email, et_age, et_time, et_mobile, etPrice;
+    EditText etMob, etName, et_email, et_age, et_time, etPrice;
     RadioButton radioMale, radioFemale, radioFree, radiopaid;
     Spinner spinnerBlodType, spinnerCountry;
     String gender,bloodType, country;
 
+    String curentUser;
+    String userEmail;
+    ArrayList<DonorInfomation> arrayList = new ArrayList<DonorInfomation>();
+
     private DatabaseReference mDatabase;
     private FirebaseAuth firebaseAuth;
+    private DatabaseReference myRef;
+    private FirebaseDatabase mFirebaseDatabase;
+
     View view;
 
     @Override
@@ -62,6 +81,9 @@ public class AddDonorFragment extends BaseFragment {
         //getting current user
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_add_donor, container, false);
+
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference();
 
         try {
             mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -77,17 +99,20 @@ public class AddDonorFragment extends BaseFragment {
 
         etName =(EditText) view.findViewById(R.id.et_name);
         etPrice = (EditText) view.findViewById(R.id.etPrice);
-        etMob = (EditText)view.findViewById(R.id.et_mobile);
         et_email = (EditText) view.findViewById(R.id.et_email);
         et_age = (EditText) view.findViewById(R.id.et_age);
         et_time = (EditText) view.findViewById(R.id.et_time);
-        et_mobile = (EditText)  view.findViewById(R.id.et_mobile);
+        etMob = (EditText) view.findViewById(R.id.et_mobile);
         radioFemale = (RadioButton) view.findViewById(R.id.radioBtn_female);
         radioMale = (RadioButton) view.findViewById(R.id.radioBtn_male);
         radioFree = (RadioButton) view.findViewById(R.id.radioBtn_paymentFreeAdd);
         radiopaid = (RadioButton) view.findViewById(R.id.radioBtn_paymentPaidAdd);
         spinnerBlodType = (Spinner) view.findViewById(R.id.spinnerBloodType);
         spinnerCountry = (Spinner) view.findViewById(R.id.spinnerCountry);
+
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        curentUser = user.getUid();
+        userEmail = user.getEmail();
 
         // Make sure the app has correct permissions to run
         requestPermissionsIfNecessary();
@@ -102,6 +127,7 @@ public class AddDonorFragment extends BaseFragment {
                     }
                 });
 
+
         Intent i = new Intent(getContext(), getLocation.class);
         startActivity(i);
         // submitResult
@@ -110,7 +136,6 @@ public class AddDonorFragment extends BaseFragment {
                     @Override
                     public void onClick(View v) {
                         try {
-
                             radioData();
                             addDonner(etName.getText().toString(),
                                     etMob.getText().toString(),
@@ -122,7 +147,7 @@ public class AddDonorFragment extends BaseFragment {
                                     spinnerCountry.getSelectedItem().toString(),
                                     getData()[1],
                                     getData()[0],
-                                    Double.parseDouble(etPrice.getText().toString())
+                                    etPrice.getText().toString()
                                     );
 
                         } catch (Exception e) {
@@ -132,8 +157,36 @@ public class AddDonorFragment extends BaseFragment {
                     }
                 });
 
+        Query query = myRef.child("Donors").child(curentUser);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                try {
+                    if (dataSnapshot.exists()) {
+                        etName.setText(dataSnapshot.child("name").getValue(String.class));
+                        et_age.setText(dataSnapshot.child("age").getValue(String.class));
+                        etPrice.setText(dataSnapshot.child("price").getValue(String.class));
+                        et_time.setText(dataSnapshot.child("time").getValue(String.class));
+                        etMob.setText(dataSnapshot.child("mobile").getValue(String.class));
+                        et_email.setText(dataSnapshot.child("email").getValue(String.class));
+//                        String price = dataSnapshot.child("price").getValue(String.class);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("ram", databaseError.getDetails());
+            }
+        });
+
+
         return view;
     }
+
 
     public String generateCode() {
         // Creating a random UUID (Universally unique identifier).
@@ -142,7 +195,7 @@ public class AddDonorFragment extends BaseFragment {
     }
 
 
-    public void addDonner(String name, String mobile, String email, String age, String time, String gender, String bloodType, String country, String longitude, String latitude, double price) {
+    public void addDonner(String name, String mobile, String email, String age, String time, String gender, String bloodType, String country, String longitude, String latitude, String price) {
         String paymentType = "f";
         if (radiopaid.isChecked()) {
             paymentType = "paid";
@@ -150,8 +203,9 @@ public class AddDonorFragment extends BaseFragment {
             paymentType = "free";
         }
         DonnerPojo donner = new DonnerPojo(name, mobile, email, age, time, gender, bloodType, country, paymentType, longitude, latitude, price);
-            mDatabase.child("Donors").child(name).setValue(donner);
+        mDatabase.child("Donors").child(curentUser).setValue(donner);
             toastMessage("تم الحفظ");
+
     }
 
 

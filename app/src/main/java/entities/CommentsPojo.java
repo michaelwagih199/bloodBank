@@ -2,12 +2,20 @@ package entities;
 
 public class CommentsPojo {
 
-    private String nodeId , commentContent,userId;
+    private String nodeId ,commentContent,userId ,mobile;
     int likeCounter;
     boolean isUserLike;
 
     public CommentsPojo() {
 
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     public String getNodeId() {

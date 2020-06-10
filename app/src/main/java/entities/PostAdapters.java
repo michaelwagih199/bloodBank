@@ -95,7 +95,7 @@ public class PostAdapters implements ListAdapter {
                 }
             });
 
-            txt_user_name.setText(subjectData.getUserId());
+            txt_user_name.setText(subjectData.getMobile());
             txt_content.setText(subjectData.getCommentContent());
             like_nombers.setText(String.valueOf(subjectData.getLikeCounter()));
 

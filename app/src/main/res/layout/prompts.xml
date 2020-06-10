@@ -23,4 +23,20 @@
         android:padding="@dimen/dimen20">
     </EditText>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Type Your MobilePhone : "
+        />
+
+    <EditText
+        android:id="@+id/etYourMobilePhone"
+        android:layout_marginTop="@dimen/dimen8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_rounded_transparent"
+        android:padding="@dimen/dimen20">
+    </EditText>
+
 </LinearLayout>
