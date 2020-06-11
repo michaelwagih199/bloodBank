@@ -6,18 +6,18 @@ package entities;
 
 public class DonorInfomation {
 
-    private String name, mobile,email,age,time,gender,bloodType, country, PaymentType,longitude,latitude;
-    double price;
+    private String name, mobile,email,age,time,gender,bloodType, country, PaymentType,longitude,latitude,price;
+
 
     public DonorInfomation(){
 
     }
 
-    public double getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
