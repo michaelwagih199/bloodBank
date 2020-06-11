@@ -58,19 +58,26 @@ public class DonnersLists extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 try {
                     if (dataSnapshot.exists()) {
-
                         for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                            Log.e("ram",""+issue);
                             DonorInfomation note = issue.getValue(DonorInfomation.class);
+
                             if (note.getCountry().equals(country)&&note.getPaymentType().equals(paidType)){
                                 arrayList.add(note);
+                                Log.e("ram",""+note);
                             }else {
 //                                toastMessage("no result");
                             }
 
                         }
-                        //                   Log.e("tttt",arrayList.get(0).getName()+""+arrayList.get(1).getName());
-                        MyListAdapter customAdapter = new MyListAdapter(getApplicationContext(), arrayList);
-                        mListView.setAdapter(customAdapter);
+                        if (arrayList.isEmpty()){
+                            toastMessage("no result");
+                        }else {
+                            //Log.e("tttt",arrayList.get(0).getName()+""+arrayList.get(1).getName());
+                            MyListAdapter customAdapter = new MyListAdapter(getApplicationContext(), arrayList);
+                            mListView.setAdapter(customAdapter);
+                        }
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
